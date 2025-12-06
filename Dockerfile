@@ -1,26 +1,27 @@
-# Build stage
+# ---------- BUILD STAGE ----------
 FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package & tsconfig
 COPY package*.json ./
 COPY tsconfig.json ./
 
-# Install dependencies
+# Install ALL deps (build needs devDependencies)
 RUN npm ci
 
-# Copy source code
+# Copy source
 COPY src ./src
 
 # Build TypeScript
 RUN npm run build
 
-# Copy migration files to dist (needed for production migrations)
+# Copy migrations to dist
 RUN mkdir -p dist/db/migrations && \
     cp -r src/db/migrations dist/db/migrations
 
-# Production stage
+
+# ---------- PRODUCTION STAGE ----------
 FROM node:18-alpine
 
 WORKDIR /app
@@ -28,28 +29,24 @@ WORKDIR /app
 # Copy package files
 COPY package*.json ./
 
-# Install only production dependencies
-RUN npm ci --only=production
+# ⚠️ IMPORTANT:
+# tsconfig-paths MUST be in prod deps
+RUN npm ci --omit=dev
 
-# Copy built files from builder
+# Copy compiled output
 COPY --from=builder /app/dist ./dist
 
-# Copy migration files (needed for production migrations)
-COPY --from=builder /app/src/db/migrations ./dist/db/migrations
-
-# Create non-root user
+# Non-root user
 RUN addgroup -g 1001 -S nodejs && \
     adduser -S nodejs -u 1001
 
 USER nodejs
 
-# Expose port
 EXPOSE 3000
 
 # Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+HEALTHCHECK --interval=30s --timeout=3s --start-period=10s --retries=3 \
+  CMD node -e "require('http').get('http://localhost:3000/health', r => process.exit(r.statusCode === 200 ? 0 : 1))"
 
-# Start application
-CMD ["node", "dist/index.js"]
-
+# ✅ Run with tsconfig-paths
+CMD ["node", "-r", "tsconfig-paths/register", "dist/index.js"]
