@@ -3,26 +3,34 @@
   "version": "1.0.0",
   "description": "Backend API para gestión de Líderes y Votantes",
   "main": "dist/index.js",
+
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc",
-    "start": "node -r tsconfig-paths/register dist/index.js",
+
+    "typecheck": "tsc --noEmit",
+
+    "build": "tsc && tsc-alias",
+
+    "start": "node dist/index.js",
+
     "migrate": "tsx src/db/migrate.ts",
     "migrate:prod": "node dist/db/migrate-compiled.js",
     "migrate:create": "tsx src/db/create-migration.ts",
+
     "seed:generate": "tsx src/db/seed-cli.ts seed",
-    "seed:clear": "tsx src/db/seed-cli.ts clear",
-    "typecheck": "tsc --noEmit",
-    "postbuild": "cp -r src/db/migrations dist/db/migrations"
+    "seed:clear": "tsx src/db/seed-cli.ts clear"
   },
+
   "keywords": [
     "express",
     "typescript",
     "postgresql",
     "api"
   ],
+
   "author": "",
   "license": "ISC",
+
   "dependencies": {
     "axios": "^1.13.2",
     "cors": "^2.8.5",
@@ -31,15 +39,17 @@
     "express-rate-limit": "^7.1.5",
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
-    "tsconfig-paths": "^4.2.0",
     "zod": "^3.22.4"
   },
+
   "devDependencies": {
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.10.5",
     "@types/pg": "^8.10.9",
+
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.7.0",
     "typescript": "^5.3.3"
   }
