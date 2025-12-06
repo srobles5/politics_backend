@@ -31,6 +31,7 @@
     "express-rate-limit": "^7.1.5",
     "morgan": "^1.10.0",
     "pg": "^8.11.3",
+    "tsconfig-paths": "^4.2.0",
     "zod": "^3.22.4"
   },
   "devDependencies": {
