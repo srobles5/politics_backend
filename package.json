@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx watch src/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node -r tsconfig-paths/register dist/index.js",
     "migrate": "tsx src/db/migrate.ts",
     "migrate:prod": "node dist/db/migrate-compiled.js",
     "migrate:create": "tsx src/db/create-migration.ts",
