@@ -18,7 +18,7 @@ RUN npm run build
 
 # ✅ Copy migrations into dist
 RUN mkdir -p dist/db/migrations && \
-    cp -r src/db/migrations dist/db/migrations
+    cp -r src/db/migrations/. dist/db/migrations/
 
 
 # ---------- PRODUCTION STAGE ----------
