@@ -9,6 +9,7 @@ services:
     environment:
       NODE_ENV: production
       DATABASE_URL: postgres://postgres:postgres@db:5432/mydb?sslmode=disable
+      GOOGLE_MAPS_API_KEY: AIzaSyDVWIbzEo3zedaP-ovUv0txVlr6lkNVFvM
 
     depends_on:
       db:
